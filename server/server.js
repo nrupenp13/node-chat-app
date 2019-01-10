@@ -1,37 +1,24 @@
-const express = require('express');
-
 const path = require('path');
+const http = require('http');
+const express = require('express');
+const socketIO = require('socket.io');
+
+const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
-//var bodyParser = require('body-parser');
+var server = http.createServer(app);
+var io = socketIO(server);
 
+app.use(express.static(publicPath));
 
-// path module in nodejs.org
-// path is a built in modeule no need to install it
+io.on('connection', (socket) => {
+  console.log('New user connected');
 
-
-const publicpath = path.join(__dirname, '../public');
-//console.log('__dirname +'/../public');
-console.log(publicpath);
-
-// Define the port to run on
-
-
-// Add middleware to console log every request
-app.use(function(req, res, next) {
-  console.log(req.method, req.url);
-  next();
+  socket.on('disconnect', () => {
+    console.log('User was disconnected');
+  });
 });
 
-// Set static directory before defining routes
-app.use(express.static(publicpath));
-
-var server = app.listen(port, function() {
-  console.log('Magic happens on port ' + port);
+server.listen(port, () => {
+  console.log(`Server is up on ${port}`);
 });
-
-// Enable parsing of posted forms
-//app.use(bodyParser.urlencoded({ extended: false }));
-
-
-// Listen for requests
