@@ -10,6 +10,6 @@ socket.on('disconnect', function() {
 });
 
 
-socket.on('newMessageEvent', function(message){
+socket.on('newMessage', function(message){
   console.log('Got New message', message);
 });
